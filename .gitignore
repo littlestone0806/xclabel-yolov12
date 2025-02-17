@@ -1,0 +1,14 @@
+﻿# clion
+.idea/
+# vs
+.vs
+.ac
+app/utils/XcEncryCode.py
+manage.spec
+docs/*
+log*
+venv*
+__pycache__
+app/__pycache__
+framework/__pycache__
+static/storage
