@@ -6,7 +6,6 @@
 app/utils/XcEncryCode.py
 manage.spec
 docs/*
-log*
 venv*
 __pycache__
 app/__pycache__
