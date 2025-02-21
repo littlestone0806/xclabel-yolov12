@@ -212,7 +212,9 @@ class UploadUtils():
                         else:
                             break
 
+                    cap.release()
                     # 分割视频为图片end
+
 
                     os.remove(video_filename_abs)
 

@@ -132,6 +132,7 @@ def api_postAdd(request):
             elif upload_type == 3:
                 __ret, __msg, __info = upload_utils.upload_sample_video(storageDir=g_config.storageDir,
                                                                         task_code=task_code, file=file)
+                #print(__ret,__msg,__info)
                 if __ret:
                     old_filename = __info.get("old_filename")
                     new_filenames = __info.get("new_filenames")

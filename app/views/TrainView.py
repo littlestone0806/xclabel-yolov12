@@ -401,8 +401,6 @@ def api_postTaskStartTrain(request):
 
         train_code = params.get("train_code", "").strip()
         try:
-            if not f_checkAuth():
-                raise Exception("请先到【系统功能/系统授权】获取授权！")
 
             train = TaskTrain.objects.filter(code=train_code)
             if len(train) > 0:
@@ -594,3 +592,24 @@ def api_getTrainLog(request):
         "log_lines": log_lines
     }
     return HttpResponseJson(res)
+
+
+def __checkTrainThread():
+    i = 0
+    mTrainUtils = TrainUtils(g_logger)
+    while True:
+        i += 1
+        trains = TaskTrain.objects.filter(train_state=1)
+        if len(trains) > 0:
+            for train in trains:
+                if not mTrainUtils.checkProcessByPid(pid=train.train_pid):
+                    train.train_state = 2
+                    train.train_stop_time = datetime.now()
+                    train.save()
+        # labelu
+
+        time.sleep(30)
+
+t = threading.Thread(target=__checkTrainThread,)
+t.daemon = True
+t.start()
