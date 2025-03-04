@@ -66,8 +66,8 @@ python -m pip install -r requirements-linux.txt -i https://pypi.tuna.tsinghua.ed
 //进入到xclabel目录, 构建Docker镜像
 docker build -t xclabel .
 
-//运行Docker容器
-docker run -p 9924:9924 xclabel
+//在后台运行Docker容器，端口9924，将容器内的storage和log文件夹挂载到主机
+docker run -d -p 9924:9924 -v ./storage:/xclabel/storage -v ./log:/xclabel/log xclabel
 
 ~~~
 
