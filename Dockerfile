@@ -2,7 +2,7 @@
 FROM python:3.8-slim
 
 # 设置工作目录
-WORKDIR /
+WORKDIR /xclabel
 
 # 复制项目文件到容器中
 COPY . .
