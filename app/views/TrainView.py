@@ -184,7 +184,7 @@ def manage(request):
         if len(train) > 0:
             train = train[0]
 
-            train_dir = "%s/train/%s" % (g_config.storageDir, train.code)
+            train_dir = os.path.join(g_config.storageDir, "train", train.code)
             train_best_model_filepath = os.path.join(train_dir, "train/weights/best.pt")
             if not os.path.exists(train_best_model_filepath):
                 train_best_model_filepath = ""
@@ -219,7 +219,7 @@ def api_postDel(request):
                     g_logger.error("del_sql=%s"%del_sql)
 
                 # 训练根目录
-                train_dir = "%s/train/%s" % (g_config.storageDir, train.code)
+                train_dir = os.path.join(g_config.storageDir, "train", train.code)
                 try:
                     if os.path.exists(train_dir):
                         shutil.rmtree(train_dir)
@@ -288,7 +288,7 @@ def api_postTaskCreateDatasets(request):
         if len(samples) < 50:
             raise Exception("标注样本数量不能低于50")
 
-        train_dir = "%s/train/%s" % (g_config.storageDir, train.code)
+        train_dir = os.path.join(g_config.storageDir, "train", train.code)
         train_datasets_dir = os.path.join(train_dir, "datasets")
         if os.path.exists(train_datasets_dir):
             shutil.rmtree(train_datasets_dir)
@@ -322,7 +322,7 @@ def api_postTaskCreateDatasets(request):
             new_filename = __sample["new_filename"]
             if new_filename.endswith(".jpg"):
                 new_filename_prefix = new_filename[0:-4]
-                src_image_filepath = "%s/task/%s/sample/%s" % (g_config.storageDir, task.code, new_filename)
+                src_image_filepath = os.path.join(g_config.storageDir, "task", task.code, "sample", new_filename)
 
                 if os.path.exists(src_image_filepath):
 
@@ -418,7 +418,7 @@ def api_postTaskStartTrain(request):
                 raise Exception("训练集路径不存在！")
 
             # 训练根目录
-            train_dir = "%s/train/%s" % (g_config.storageDir, train.code)
+            train_dir = os.path.join(g_config.storageDir, "train", train.code)
             if not os.path.exists(train_dir):
                 os.makedirs(train_dir)
             train_log_filepath = os.path.join(train_dir, "train.log") # 训练日志
@@ -569,7 +569,7 @@ def api_getTrainLog(request):
         task = Task.objects.filter(code=task_code)
         if len(task) > 0:
             task = task[0]
-            train_dir = "%s/train/%s" % (g_config.storageDir, train_code)
+            train_dir = os.path.join(g_config.storageDir, "train" , train_code)
             train_log_filepath = os.path.join(train_dir, "train.log")
             if os.path.exists(train_log_filepath):
                 f = open(train_log_filepath, "r")
