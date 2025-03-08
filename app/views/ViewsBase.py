@@ -1,6 +1,7 @@
 import json
 import os
 import base64
+import platform
 from datetime import datetime, timedelta
 from django.db import connection
 from app.utils.Config import Config
@@ -16,8 +17,12 @@ if not os.path.exists(__log_dir):
 g_logger = CreateLogger(filepath=os.path.join(__log_dir, "xclabel%s.log" % (datetime.now().strftime("%Y%m%d-%H%M%S"))), is_show_console=True)
 g_logger.info("xclabel %s,%s" % (PROJECT_VERSION, PROJECT_FLAG))
 g_logger.info("BASE_DIR:%s" % BASE_DIR)
-g_config = Config(filepath=os.path.join(BASE_DIR, "config.json"))
-g_logger.info("config.json:%s" % g_config.getConfigStr())
+if platform.system() == "Linux" or platform.system() == "Darwin":
+    g_config = Config(filepath=os.path.join(BASE_DIR, "config-linux.json"))
+    g_logger.info("config-linux.json:%s" % g_config.getConfigStr())
+else:
+    g_config = Config(filepath=os.path.join(BASE_DIR, "config.json"))
+    g_logger.info("config.json:%s" % g_config.getConfigStr())
 g_osSystem = OSSystem()
 
 g_session_key_user = "user"
