@@ -243,7 +243,7 @@ def api_postDel(request):
             if not g_database.execute(del_sql):
                 g_logger.error("del_sql=%s" % del_sql)
 
-            task_dir = "%s/task/%s" % (g_config.storageDir, task_code)
+            task_dir = os.path.join(g_config.storageDir, "task", task_code)
             try:
                 if os.path.exists(task_dir):
                     shutil.rmtree(task_dir)

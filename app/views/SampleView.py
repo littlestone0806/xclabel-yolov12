@@ -304,7 +304,13 @@ def api_postDel(request):
         if len(sample) > 0:
             sample = sample[0]
 
-            new_filename_abs = "%s/task/%s/sample/%s" % (g_config.storageDir, sample.task_code, sample.new_filename)
+            new_filename_abs = os.path.join(
+                g_config.storageDir, 
+                'task', 
+                sample.task_code, 
+                'sample', 
+                sample.new_filename
+            )
             if os.path.exists(new_filename_abs):
                 os.remove(new_filename_abs)
             sample.delete()

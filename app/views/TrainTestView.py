@@ -23,8 +23,8 @@ def api_postDel(request):
         if len(test) > 0:
             test = test[0]
             # 训练根目录
-            train_dir = "%s/train/%s" % (g_config.storageDir, test.train_code)
-            test_save_dir = "%s/test/%s"%(train_dir,test_code)
+            train_dir = os.path.join(g_config.storageDir, "train", test.train_code)
+            test_save_dir = os.path.join(g_config.storageDir, "test", test_code)
             try:
                 if os.path.exists(test_save_dir):
                     shutil.rmtree(test_save_dir)
@@ -60,7 +60,7 @@ def api_postAdd(request):
                 raise Exception("该训练任务不存在！")
 
             # 训练根目录
-            train_dir = "%s/train/%s" % (g_config.storageDir, train.code)
+            train_dir = os.path.join(g_config.storageDir, "train", train.code)
             if not os.path.exists(train_dir):
                 os.makedirs(train_dir)
 
@@ -73,7 +73,7 @@ def api_postAdd(request):
                 raise Exception("请选择上传文件！")
 
             test_code = "test" + datetime.now().strftime("%Y%m%d%H%M%S") + str(random.randint(1000, 9999))  # 随机生成一个测试编号
-            test_save_dir = "%s/test/%s"%(train_dir,test_code)
+            test_save_dir = os.path.join(train_dir, "test", test_code)
             if not os.path.exists(test_save_dir):
                 os.makedirs(test_save_dir)
 
