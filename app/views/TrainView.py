@@ -306,7 +306,7 @@ def api_postTaskCreateDatasets(request):
 
         train_datasets = os.path.join(train_datasets_dir, "data.yaml")
         f = open(train_datasets, "w")
-        f.write("path: ../%s\n" % train_datasets_dir)
+        f.write("path: ./%s\n" % train_datasets_dir)
         f.write("train: ./train\n")
         f.write("val: ./valid\n")
         f.write("nc: %d\n" % len(names))
@@ -445,7 +445,7 @@ def api_postTaskStartTrain(request):
                 else:
                     cd_dirve = ""
 
-                __command_run = "{yolo12_name} detect train model={yolo12_model} data={datasets} batch={batch}  epochs={epochs} imgsz={imgsz} save_period={save_period} device={device} project={project} > {train_log_filepath}".format(
+                __command_run = "{yolo12_name} settings datasets_dir='.' && {yolo12_name} detect train model={yolo12_model} data={datasets} batch={batch} epochs={epochs} imgsz={imgsz} save_period={save_period} device={device} {extra} project={project} > {train_log_filepath} 2>&1".format(
                     yolo12_name=yolo12_name,
                     yolo12_model=yolo12_model,
                     datasets=train.train_datasets,
@@ -455,9 +455,10 @@ def api_postTaskStartTrain(request):
                     save_period=train.save_period,
                     device=train.device,
                     project=train_dir,
+                    extra=train.extra,
                     train_log_filepath=train_log_filepath
                 )
-                __train_command = "{yolo12_venv} && {command_run}".format(
+                __train_command = "{yolo12_venv} && set PYTHONIOENCODING=utf-8 && {command_run}".format(
                     cd_dirve=cd_dirve,
                     yolo12_install_dir=yolo12_install_dir,
                     yolo12_venv=yolo12_venv,
