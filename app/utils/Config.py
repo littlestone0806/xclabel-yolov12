@@ -27,8 +27,7 @@ class Config:
                 os.makedirs(self.storageTempDir)
             # self.storageDir_www = "http://%s:%d/storage/access?filename=" % (host, adminPort)
             self.storageDir_www = "/storage/access?filename="
-            self.yolo8 = config_data.get("yolo8")
-            self.yolo11 = config_data.get("yolo11")
+            self.yolo12 = config_data.get("yolo12")
 
         else:
             msg = "Config read %s error" % str(filepath)

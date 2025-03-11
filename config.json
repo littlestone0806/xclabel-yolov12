@@ -2,17 +2,11 @@
   "host": "127.0.0.1",
   "port": 9924,
   "ffmpeg": "ffmpeg",
-  "storageDir": "E:\\project\\bxc\\gitee\\xclabel\\static\\storage",
-  "yolo8": {
-    "install_dir": "E:\\project\\ai\\yolov8",
-    "venv": "venv\\Scripts\\activate.bat",
+  "storageDir": "project",
+  "yolo12": {
+    "install_dir": "yolov12",
+    "venv": "call activate .\\env",
     "name": "yolo",
-    "model": "yolov8n.pt"
-  },
-  "yolo11": {
-    "install_dir": "E:\\project\\ai\\yolov11",
-    "venv": "venv\\Scripts\\activate.bat",
-    "name": "yolo",
-    "model": "yolo11n.pt"
+    "model": "yolov12n.pt"
   }
 }

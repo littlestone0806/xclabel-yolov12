@@ -99,32 +99,33 @@ def api_postAdd(request):
             calcu_start_time = time.time()
 
 
-            if train.algorithm_code == "yolo8" or train.algorithm_code == "yolo11":
+            if train.algorithm_code == "yolo12":
 
-                yolo8_install_dir = getattr(g_config, train.algorithm_code)["install_dir"]
-                yolo8_venv = getattr(g_config, train.algorithm_code)["venv"]
-                yolo8_name = getattr(g_config, train.algorithm_code)["name"]
-                yolo8_model = os.path.join(yolo8_install_dir, getattr(g_config, train.algorithm_code)["model"])
+                yolo12_install_dir = getattr(g_config, train.algorithm_code)["install_dir"]
+                yolo12_venv = getattr(g_config, train.algorithm_code)["venv"]
+                yolo12_name = getattr(g_config, train.algorithm_code)["name"]
+                yolo12_model = getattr(g_config, train.algorithm_code)["model"]
 
                 osSystem = OSSystem()
                 if osSystem.getSystemName() == "Windows":
                     # Windows系统，需要执行下切换盘符的步骤
-                    dirve, tail = os.path.splitdrive(yolo8_install_dir)
+                    dirve, tail = os.path.splitdrive(yolo12_install_dir)
                     cd_dirve = "%s &&" % dirve
                 else:
                     cd_dirve = ""
 
-                __command_run = "{yolo8_name} detect predict model={model} source={source} device=cpu project={project} > {test_predict_log_filepath}".format(
-                    yolo8_name=yolo8_name,
+                __command_run = "{yolo12_name} detect predict model={model} source={source} device={device} project={project} > {test_predict_log_filepath}".format(
+                    yolo12_name=yolo12_name,
                     model=train_best_model_filepath,
                     source=test_filepath,
                     project=test_save_dir,
+                    device=train.device,
                     test_predict_log_filepath=test_predict_log_filepath
                 )
-                __predict_command = "{cd_dirve} cd {yolo8_install_dir} && {yolo8_venv} && {command_run}".format(
+                __predict_command = "{yolo12_venv} && {command_run}".format(
                     cd_dirve=cd_dirve,
-                    yolo8_install_dir=yolo8_install_dir,
-                    yolo8_venv=yolo8_venv,
+                    yolo12_install_dir=yolo12_install_dir,
+                    yolo12_venv=yolo12_venv,
                     command_run=__command_run
                 )
                 g_logger.info("测试模型命令行：%s" % __predict_command)

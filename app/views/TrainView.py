@@ -153,12 +153,8 @@ def add(request):
         tasks = g_database.select("select * from xc_task")
         algorithms = [
             {
-                "name":"YOLO8",
-                "code":"yolo8"
-            },
-            {
-                "name": "YOLO11",
-                "code": "yolo11"
+                "name": "YOLO12",
+                "code": "yolo12"
             }
 
         ]
@@ -310,8 +306,9 @@ def api_postTaskCreateDatasets(request):
 
         train_datasets = os.path.join(train_datasets_dir, "data.yaml")
         f = open(train_datasets, "w")
-        f.write("train: %s\n" % train_datasets_train_dir)
-        f.write("val: %s\n" % train_datasets_valid_dir)
+        f.write("path: ../%s\n" % train_datasets_dir)
+        f.write("train: ./train\n")
+        f.write("val: ./valid\n")
         f.write("nc: %d\n" % len(names))
         f.write("names: [%s]\n" % ",".join(map(lambda x: "'" + str(x) + "'", names)))
         f.close()
@@ -432,25 +429,25 @@ def api_postTaskStartTrain(request):
             __start_process_info = None
             __train_command = None
 
-            if train.algorithm_code == "yolo8" or train.algorithm_code == "yolo11":
+            if train.algorithm_code == "yolo12":
 
-                yolo8_install_dir = getattr(g_config, train.algorithm_code)["install_dir"]
-                yolo8_venv = getattr(g_config, train.algorithm_code)["venv"]
-                yolo8_name = getattr(g_config, train.algorithm_code)["name"]
-                yolo8_model = os.path.join(yolo8_install_dir, getattr(g_config, train.algorithm_code)["model"])
+                yolo12_install_dir = getattr(g_config, train.algorithm_code)["install_dir"]
+                yolo12_venv = getattr(g_config, train.algorithm_code)["venv"]
+                yolo12_name = getattr(g_config, train.algorithm_code)["name"]
+                yolo12_model = getattr(g_config, train.algorithm_code)["model"]
 
 
                 osSystem = OSSystem()
                 if osSystem.getSystemName() == "Windows":
                     # Windows系统，需要执行下切换盘符的步骤
-                    dirve, tail = os.path.splitdrive(yolo8_install_dir)
+                    dirve, tail = os.path.splitdrive(yolo12_install_dir)
                     cd_dirve = "%s &&" % dirve
                 else:
                     cd_dirve = ""
 
-                __command_run = "{yolo8_name} detect train model={yolo8_model} data={datasets} batch={batch}  epochs={epochs} imgsz={imgsz} save_period={save_period} device={device} project={project} > {train_log_filepath}".format(
-                    yolo8_name=yolo8_name,
-                    yolo8_model=yolo8_model,
+                __command_run = "{yolo12_name} detect train model={yolo12_model} data={datasets} batch={batch}  epochs={epochs} imgsz={imgsz} save_period={save_period} device={device} project={project} > {train_log_filepath}".format(
+                    yolo12_name=yolo12_name,
+                    yolo12_model=yolo12_model,
                     datasets=train.train_datasets,
                     batch=train.batch,
                     epochs=train.epochs,
@@ -460,10 +457,10 @@ def api_postTaskStartTrain(request):
                     project=train_dir,
                     train_log_filepath=train_log_filepath
                 )
-                __train_command = "{cd_dirve} cd {yolo8_install_dir} && {yolo8_venv} && {command_run}".format(
+                __train_command = "{yolo12_venv} && {command_run}".format(
                     cd_dirve=cd_dirve,
-                    yolo8_install_dir=yolo8_install_dir,
-                    yolo8_venv=yolo8_venv,
+                    yolo12_install_dir=yolo12_install_dir,
+                    yolo12_venv=yolo12_venv,
                     command_run=__command_run
                 )
                 g_logger.info("训练启动命令行：%s" % __train_command)
@@ -485,7 +482,7 @@ def api_postTaskStartTrain(request):
                 mTrainUtils = TrainUtils(g_logger)
                 for i in range(5):
                     time.sleep(i)
-                    __info = mTrainUtils.getProcessInfoByName(processName=yolo8_name)
+                    __info = mTrainUtils.getProcessInfoByName(processName=yolo12_name)
                     if __info["state"]:
                         __start_process_info = __info
                         break
@@ -572,7 +569,7 @@ def api_getTrainLog(request):
             train_dir = os.path.join(g_config.storageDir, "train" , train_code)
             train_log_filepath = os.path.join(train_dir, "train.log")
             if os.path.exists(train_log_filepath):
-                f = open(train_log_filepath, "r")
+                f = open(train_log_filepath, "r", encoding='utf-8')
                 lines = f.readlines()
                 f.close()
 
